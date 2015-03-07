@@ -4,10 +4,9 @@ import org.scalatest.{FlatSpec, ShouldMatchers}
 
 class RangeTest extends FlatSpec with ShouldMatchers {
 
-  "A range" should "have a lower bound actually not higher than the upper bound" in {
-    an [IllegalArgumentException] shouldBe thrownBy {
-      Range(2, 1)
-    }
+  "A range" should "can be empty or not" in {
+    Range(2, 1) shouldBe Range.Empty
+    Range(1, 2) shouldBe Range.NonEmpty(1, 2)
   }
 
   it should "be defined as a singleton range" in {
@@ -32,8 +31,16 @@ class RangeTest extends FlatSpec with ShouldMatchers {
   }
 
   it should "be split by a pivot" in {
-    Range(1, 100).splitBy(50) shouldBe (Some(Range(1, 49)), Some(Range(51, 100)))
-    Range(1, 100).splitBy(1) shouldBe (None, Some(Range(2, 100)))
-    Range(1, 100).splitBy(100) shouldBe (Some(Range(1, 99)), None)
+    Range(1, 100).splitBy(50) shouldBe (Range(1, 49), Range(51, 100))
+    Range(1, 100).splitBy(1) shouldBe (Range.Empty, Range(2, 100))
+    Range(1, 100).splitBy(100) shouldBe (Range(1, 99), Range.Empty)
+  }
+
+  it should "be intersected" in {
+    Range(1, 10) intersect Range(2, 8) shouldBe Range(2, 8)
+    Range(1, 6) intersect Range(2, 8) shouldBe Range(2, 6)
+    Range(1, 2) intersect Range(8, 10) shouldBe Range.Empty
+    Range.Empty intersect Range(1, 2) shouldBe Range.Empty
+    Range(1, 2) intersect Range.Empty shouldBe Range.Empty
   }
 }

@@ -1,6 +1,6 @@
 package spock
 
-import org.scalatest.{ShouldMatchers, FlatSpec}
+import org.scalatest.{FlatSpec, ShouldMatchers}
 
 class DistroTest extends FlatSpec with ShouldMatchers {
 
@@ -11,9 +11,12 @@ class DistroTest extends FlatSpec with ShouldMatchers {
   }
 
   it should "sum one" in {
-    an [IllegalArgumentException] shouldBe thrownBy {
-      Distro(1 -> 0.4, 2 -> 0.4)
-    }
+    an [IllegalArgumentException] shouldBe thrownBy(Distro(1 -> 0.4, 2 -> 0.4))
+  }
+
+  it should "reject events out of range" in {
+    an [IllegalArgumentException] shouldBe thrownBy(Distro(0 -> 1.0))
+    an [IllegalArgumentException] shouldBe thrownBy(Distro(101 -> 1.0))
   }
 
   it should "be normalized from weighted events" in {
@@ -50,5 +53,6 @@ class DistroTest extends FlatSpec with ShouldMatchers {
     prob.conditional(6, Range(1, 5)) shouldBe 0
     prob.conditional(Range(2, 5), Range(1, 5)) shouldBe 0.8
     prob.conditional(Range(-1, 6), Range(1, 5)) shouldBe 1
+    prob.conditional(Range(1, 10), Range.Empty) shouldBe 0
   }
 }

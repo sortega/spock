@@ -5,6 +5,9 @@ package object spock {
     val Max = 5
   }
 
+  val MinValue = 1
+  val MaxValue = 100
+
   val Score = Map[Attempt, Int](
     1 -> 100,
     2 ->  80,
