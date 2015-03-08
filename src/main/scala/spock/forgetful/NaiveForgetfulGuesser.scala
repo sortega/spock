@@ -12,8 +12,8 @@ class NaiveForgetfulGuesser extends Guesser {
   override def notifyFeedback(feedback: Feedback): Unit = {
     range = feedback match {
       case Guessed | NotGuessed => Range.Initial
-      case Smaller => Range.NonEmpty(range.lower, guess)
-      case Bigger => Range.NonEmpty(guess, range.upper)
+      case Smaller => Range.NonEmpty(range.lower, guess - 1)
+      case Bigger => Range.NonEmpty(guess + 1, range.upper)
     }
   }
 }
