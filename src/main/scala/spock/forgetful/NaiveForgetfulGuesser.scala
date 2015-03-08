@@ -1,6 +1,7 @@
-package spock
+package spock.forgetful
 
 import spock.Guesser._
+import spock.{Guesser, Range}
 
 class NaiveForgetfulGuesser extends Guesser {
 
