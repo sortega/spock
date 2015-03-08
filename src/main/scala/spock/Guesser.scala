@@ -1,7 +1,5 @@
 package spock
 
-import scalaz.syntax.std.boolean._
-
 trait Guesser {
   def guess: Int
   def notifyFeedback(feedback: Guesser.Feedback): Unit
@@ -10,7 +8,10 @@ trait Guesser {
 object Guesser {
   sealed trait Feedback {
     def symbol: String
-    def unapply(str: String): Option[this.type] = (str == this.symbol).option(this)
+  }
+  object Feedback {
+    def unapply(str: String): Option[Feedback] =
+      Seq(Bigger, Smaller, Guessed, NotGuessed).find(_.symbol == str)
   }
   case object Bigger extends Feedback {
     override val symbol = "+"
