@@ -1,4 +1,4 @@
-package spock.learning
+package spock.learning.guesser
 
 import spock._
 

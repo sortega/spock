@@ -1,4 +1,4 @@
-package spock.learning
+package spock.learning.guesser
 
 import org.scalatest.{FlatSpec, ShouldMatchers}
 import spock.Range

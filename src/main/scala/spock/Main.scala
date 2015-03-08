@@ -1,7 +1,7 @@
 package spock
 
 import spock.forgetful.NaiveForgetfulPicker
-import spock.learning.{FrequencyDistroEstimator, LearningGuesser}
+import spock.learning.guesser.{LearningGuesser, FrequencyDistroEstimator}
 
 object Main {
   def main(args: Array[String]): Unit = args match {
