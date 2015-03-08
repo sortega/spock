@@ -24,6 +24,7 @@ object Range {
     override def splitBy(pivot: Int) = (Empty, Empty)
     override def contains(elem: Int) = false
     override def intersect(other: Range) = Empty
+    override def toString = "∅"
   }
 
   /** Bounds-included range */
@@ -42,5 +43,7 @@ object Range {
       case Empty => Empty
       case otherRange: NonEmpty => Range(lower max otherRange.lower, upper min otherRange.upper)
     }
+
+    override def toString = s"[$lower, $upper]"
   }
 }
