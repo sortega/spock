@@ -1,4 +1,6 @@
-package spock
+package spock.learning
+
+import spock._
 
 case class Distro(events: Map[Int, Double]) {
   require(events.keys.forall(e => e >= MinValue && e <= MaxValue), s"Out of range events: $this")

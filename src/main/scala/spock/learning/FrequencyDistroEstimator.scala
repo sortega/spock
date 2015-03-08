@@ -1,6 +1,7 @@
-package spock
+package spock.learning
 
 import spock.Range.NonEmpty
+import spock._
 
 class FrequencyDistroEstimator(var frequencies: Map[Int, Double]) extends DistroEstimator {
 

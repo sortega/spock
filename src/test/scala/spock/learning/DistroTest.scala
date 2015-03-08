@@ -1,6 +1,7 @@
-package spock
+package spock.learning
 
 import org.scalatest.{FlatSpec, ShouldMatchers}
+import spock.Range
 
 class DistroTest extends FlatSpec with ShouldMatchers {
 

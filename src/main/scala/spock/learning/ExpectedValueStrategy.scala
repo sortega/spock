@@ -1,6 +1,8 @@
-package spock
+package spock.learning
 
 import scalaz.Memo
+
+import spock._
 
 class ExpectedValueStrategy(prob: Distro) {
 

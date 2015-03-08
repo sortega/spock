@@ -1,6 +1,7 @@
-package spock
+package spock.learning
 
 import org.scalatest.{FlatSpec, ShouldMatchers}
+import spock.Range
 
 class ExpectedValueStrategyTest extends FlatSpec with ShouldMatchers {
   val uniformStrategy = new ExpectedValueStrategy(Distro.uniform((1 to 100).toSet))

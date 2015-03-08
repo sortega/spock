@@ -1,8 +1,9 @@
-package spock
+package spock.learning
 
 import scala.util.Random
 
 import org.scalatest.{FlatSpec, ShouldMatchers}
+import spock.Range
 
 class FrequencyDistroEstimatorTest extends FlatSpec with ShouldMatchers {
 

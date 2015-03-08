@@ -1,4 +1,6 @@
-package spock
+package spock.learning
+
+import spock.Range
 
 /** Distribution estimator that learns with each observations */
 trait DistroEstimator {
