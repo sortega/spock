@@ -8,9 +8,16 @@ trait Picker {
 }
 
 object Picker {
-  sealed trait Feedback
-  case object NotGuessed extends Feedback
-  case class Guessed(attempt: Int) extends Feedback
+  sealed trait Feedback {
+    def guesserScore: Int
+    def pickerScore = Score(1) - guesserScore
+  }
+  case object NotGuessed extends Feedback {
+    override def guesserScore = 0
+  }
+  case class Guessed(attempt: Int) extends Feedback {
+    override def guesserScore = Score(attempt)
+  }
 
   object Feedback {
     private val GuessedPattern = "guessed at ([1-5])".r
