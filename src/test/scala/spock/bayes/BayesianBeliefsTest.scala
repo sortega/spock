@@ -3,7 +3,7 @@ package spock.bayes
 import org.scalatest.{FlatSpec, ShouldMatchers}
 import spock.Eps
 
-class BayesianDomainTest extends FlatSpec with ShouldMatchers {
+class BayesianBeliefsTest extends FlatSpec with ShouldMatchers {
 
   case class Machine(defectRate: Double) extends BayesianBeliefs.Hypothesis[Boolean] {
     override def probGiven(failure: Boolean): Double = {
@@ -17,7 +17,7 @@ class BayesianDomainTest extends FlatSpec with ShouldMatchers {
 
   // https://en.wikipedia.org/wiki/Bayes%27_theorem#Introductory_example
   "The machines example" should "be successfully computed" in {
-    val PriorBeliefs = BayesianBeliefs[Boolean](Map(A -> 0.2, B -> 0.3, C -> 0.5))
+    val PriorBeliefs = BayesianBeliefs[Boolean, Machine](Map(A -> 0.2, B -> 0.3, C -> 0.5))
     PriorBeliefs.update(true).hypotheses(C) should equal (5.0/24.0 +- Eps)
   }
 
@@ -31,7 +31,7 @@ class BayesianDomainTest extends FlatSpec with ShouldMatchers {
   val D12 = Dice(12)
 
   "The dices domain" should "drop belief to 0 when an impossible roll is seen" in {
-    val PriorBeliefs = BayesianBeliefs[Int](Map(D6 -> 0.5, D10 -> 0.35, D12 -> 0.35))
+    val PriorBeliefs = BayesianBeliefs[Int, Dice](Map(D6 -> 0.5, D10 -> 0.35, D12 -> 0.35))
     val after1 = PriorBeliefs.update(1)
     after1.hypotheses.values.forall(_ > 0) shouldBe true
     val after7 = after1.update(7)

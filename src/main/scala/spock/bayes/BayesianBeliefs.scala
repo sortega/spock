@@ -2,18 +2,20 @@ package spock.bayes
 
 import spock.bayes.BayesianBeliefs.Hypothesis
 
-case class BayesianBeliefs[Observation](hypotheses: Map[Hypothesis[Observation], Double]) {
+case class BayesianBeliefs[Obs, Hyp <: Hypothesis[Obs]](hypotheses: Map[Hyp, Double]) {
   require(hypotheses.values.forall(_ >= 0))
 
-  def update(observation: Observation) = BayesianBeliefs(normalize(
-    for ((hypothesis, prior) <- hypotheses)
-    yield (hypothesis, prior * hypothesis.probGiven(observation))
-  ))
+  def update(observation: Obs): BayesianBeliefs[Obs, Hyp] =
+    BayesianBeliefs(normalize(
+      for ((hypothesis, prior) <- hypotheses)
+      yield (hypothesis, prior * hypothesis.probGiven(observation)),
+      observation
+    ))
 
-  private def normalize(hypotheses: Map[Hypothesis[Observation], Double]) = {
-    val totalWeight = hypotheses.values.sum
-    if (totalWeight > 0) hypotheses.mapValues(_ / totalWeight)
-    else throw new IllegalArgumentException("The impossible has happened")
+  private def normalize(notNormalized: Map[Hyp, Double], observation: Obs) = {
+    val totalWeight = notNormalized.values.sum
+    if (totalWeight > 0) notNormalized.mapValues(_ / totalWeight)
+    else throw new IllegalArgumentException(s"The impossible has happened: $observation, $hypotheses")
   }
 }
 
