@@ -2,7 +2,7 @@ package spock.learning.guesser
 
 import spock._
 
-case class Distro(events: Map[Int, Double]) {
+case class PickerDistro(events: Map[Int, Double]) {
   require(events.keys.forall(e => e >= MinValue && e <= MaxValue), s"Out of range events: $this")
   require(events.values.forall(_ >= 0), s"Negative probabilities: $this")
   require(1 - events.values.sum < Eps, s"Probabilities doesn't sum 1: $this")
@@ -26,17 +26,17 @@ case class Distro(events: Map[Int, Double]) {
   }
 }
 
-object Distro {
+object PickerDistro {
 
-  def apply(events: (Int, Double)*): Distro = Distro(events.toMap)
+  def apply(events: (Int, Double)*): PickerDistro = PickerDistro(events.toMap)
 
-  def normalize(events: Map[Int, Double]): Distro = {
+  def normalize(events: Map[Int, Double]): PickerDistro = {
     val sum = events.values.sum
-    Distro(events.mapValues(_ / sum))
+    PickerDistro(events.mapValues(_ / sum))
   }
 
-  def uniform(events: Set[Int]): Distro = {
+  def uniform(events: Set[Int]): PickerDistro = {
     val weight = 1d / events.size
-    Distro(events.map(_ -> weight).toMap)
+    PickerDistro(events.map(_ -> weight).toMap)
   }
 }

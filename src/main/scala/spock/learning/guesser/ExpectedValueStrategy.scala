@@ -4,7 +4,7 @@ import scalaz.Memo
 
 import spock._
 
-class ExpectedValueStrategy(prob: Distro) {
+class ExpectedValueStrategy(prob: PickerDistro) {
 
   type ScoreMap = Map[Int, Double]
   private case class Scope(attempt: Attempt, range: Range)

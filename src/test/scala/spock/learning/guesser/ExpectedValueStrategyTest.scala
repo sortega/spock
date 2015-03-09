@@ -4,7 +4,7 @@ import org.scalatest.{FlatSpec, ShouldMatchers}
 import spock.Range
 
 class ExpectedValueStrategyTest extends FlatSpec with ShouldMatchers {
-  val uniformStrategy = new ExpectedValueStrategy(Distro.uniform((1 to 100).toSet))
+  val uniformStrategy = new ExpectedValueStrategy(PickerDistro.uniform((1 to 100).toSet))
 
   "The expected value strategy" should "choose the only option" in {
     uniformStrategy.choose(attempt = 1, range = Range(1)) shouldBe 1
@@ -12,7 +12,7 @@ class ExpectedValueStrategyTest extends FlatSpec with ShouldMatchers {
   }
 
   it should "choose the most likely out of two options" in {
-    val strategy = new ExpectedValueStrategy(Distro(1 -> 0.4, 2 -> 0.6))
+    val strategy = new ExpectedValueStrategy(PickerDistro(1 -> 0.4, 2 -> 0.6))
     strategy.choose(attempt = 1, range = Range(1, 2)) shouldBe 2
   }
 
@@ -27,7 +27,7 @@ class ExpectedValueStrategyTest extends FlatSpec with ShouldMatchers {
   }
 
   it should "focus on the elements with most probability" in {
-    val strategy = new ExpectedValueStrategy(Distro.uniform((90 to 100).toSet))
+    val strategy = new ExpectedValueStrategy(PickerDistro.uniform((90 to 100).toSet))
     strategy.choose(attempt = 4, range = Range.Initial) should equal (95 +- 5)
   }
 }

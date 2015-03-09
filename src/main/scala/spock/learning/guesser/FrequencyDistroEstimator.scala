@@ -5,7 +5,7 @@ import spock._
 
 class FrequencyDistroEstimator(var frequencies: Map[Int, Double]) extends DistroEstimator {
 
-  override def distro = Distro.normalize(frequencies)
+  override def distro = PickerDistro.normalize(frequencies)
 
   override def learn(observation: NonEmpty): Unit = {
     val weight = 1d / observation.size

@@ -5,7 +5,7 @@ import scala.util.Random
 import org.scalatest.{FlatSpec, ShouldMatchers}
 import spock.Range
 
-class FrequencyDistroEstimatorTest extends FlatSpec with ShouldMatchers {
+class FrequencyPickerDistroEstimatorTest extends FlatSpec with ShouldMatchers {
 
   "A frequency distribution estimator" should "learn with observations" in {
     val estimator = FrequencyDistroEstimator.uniformPrior(1)
