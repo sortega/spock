@@ -4,6 +4,13 @@ import spock.Strategy
 
 object BenchmarkMain extends App {
 
+  def printRanking(name: String, ranking: Seq[(Any, Int)]): Unit = {
+    println(s"$name ranking")
+    for ((player, score) <- ranking.sortBy(-_._2)) {
+      println(s"\t$score\t$player")
+    }
+  }
+
   val arbiter = new Arbiter(100)
   val results = (for {
     picker <- Strategy.Pickers
@@ -20,7 +27,7 @@ object BenchmarkMain extends App {
       case ((_, `guesser`), result) => result.guesserPoints
     }.sum
   } yield guesser -> totalScore
-  println(topGuessers.sortBy(-_._2))
+  printRanking("guesser", topGuessers)
 
   val topPickers = for {
     picker <- Strategy.Pickers
@@ -28,5 +35,5 @@ object BenchmarkMain extends App {
       case ((`picker`, _), result) => result.pickerPoints
     }.sum
   } yield picker -> totalScore
-  println(topPickers.sortBy(-_._2))
+  printRanking("picker", topPickers)
 }
