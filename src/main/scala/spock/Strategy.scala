@@ -1,6 +1,6 @@
 package spock
 
-import spock.stateless.{NaiveGuesser, NaivePicker}
+import spock.stateless.{AntiBinaryPicker, NaiveGuesser, NaivePicker}
 import spock.learning.guesser.{BayesianDistroEstimator, FrequencyDistroEstimator, LearningGuesser}
 import spock.learning.picker.LearningPicker
 
@@ -14,7 +14,8 @@ object Strategy {
   val Guessers = Seq(Guesser.Naive, Guesser.FreqCount, Guesser.Bayesian)
   object Picker {
     val Naive = new NaivePicker
+    val AntiBinary = new AntiBinaryPicker
     val Bayesian = new LearningPicker
   }
-  val Pickers = Seq(Picker.Naive, Picker.Bayesian)
+  val Pickers = Seq(Picker.Naive, Picker.AntiBinary, Picker.Bayesian)
 }
