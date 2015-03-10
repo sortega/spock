@@ -6,17 +6,18 @@ import spock._
 
 class ExpectedValueStrategy(prob: PickerDistro) {
 
-  type ScoreMap = Map[Int, Double]
+  type Scores = Array[Double]
   private case class Scope(attempt: Attempt, range: Range)
 
-  def choose(attempt: Attempt, range: Range): Int = {
+  def choose(attempt: Attempt, range: Range.NonEmpty): Int = {
     val scores = expectedScores(Scope(attempt, range))
-    scores.maxBy(_._2)._1
+    range.lower + scores.indexOf(scores.max)
   }
 
-  private val expectedScores: Scope => ScoreMap = Memo.mutableHashMapMemo { scope =>
-    val scores = for {
-      pivot <- scope.range.iterable
+  private val expectedScores: Scope => Scores = Memo.mutableHashMapMemo { scope =>
+    val scores = Array.fill(scope.range.size)(0d)
+    for {
+      (pivot, index) <- scope.range.iterable.zipWithIndex
       (leftRange, rightRange) = scope.range.splitBy(pivot)
     } yield {
       def notGuessedScore(remainingRange: Range) = {
@@ -28,14 +29,14 @@ class ExpectedValueStrategy(prob: PickerDistro) {
       val whenGuessed = prob.conditional(pivot, scope.range) * Score(scope.attempt)
       val whenGreater = notGuessedScore(rightRange)
 
-      whenLower + whenGuessed + whenGreater
+      scores(index) += whenLower + whenGuessed + whenGreater
     }
-    scope.range.iterable.zip(scores).toMap
+    scores
   }
 
   private val expectedScore: Scope => Double = Memo.mutableHashMapMemo { scope =>
     if (scope.range.size == 0) 0
     else if (scope.range.size == 1 || scope.attempt > Attempt.Max) Score(scope.attempt)
-    else expectedScores(scope).values.max
+    else expectedScores(scope).max
   }
 }
