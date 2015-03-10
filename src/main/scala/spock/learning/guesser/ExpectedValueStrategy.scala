@@ -6,8 +6,8 @@ import spock._
 
 class ExpectedValueStrategy(prob: PickerDistro) {
 
+  import ExpectedValueStrategy._
   type Scores = Array[Double]
-  private case class Scope(attempt: Attempt, range: Range)
 
   def choose(attempt: Attempt, range: Range.NonEmpty): Int = {
     val scores = expectedScores(Scope(attempt, range))
@@ -20,9 +20,11 @@ class ExpectedValueStrategy(prob: PickerDistro) {
       (pivot, index) <- scope.range.iterable.zipWithIndex
       (leftRange, rightRange) = scope.range.splitBy(pivot)
     } yield {
-      def notGuessedScore(remainingRange: Range) = {
-        prob.conditional(remainingRange, scope.range) *
-          expectedScore(Scope(scope.attempt + 1, remainingRange))
+      def notGuessedScore(remainingRange: Range) = remainingRange match {
+        case Range.Empty => 0d
+        case nonEmptyRange: Range.NonEmpty =>
+          prob.conditional(nonEmptyRange, scope.range) *
+            expectedScore(Scope(scope.attempt + 1, nonEmptyRange))
       }
 
       val whenLower = notGuessedScore(leftRange)
@@ -38,5 +40,19 @@ class ExpectedValueStrategy(prob: PickerDistro) {
     if (scope.range.size == 0) 0
     else if (scope.range.size == 1 || scope.attempt > Attempt.Max) Score(scope.attempt)
     else expectedScores(scope).max
+  }
+}
+
+private object ExpectedValueStrategy {
+  private class Scope private (val attempt: Attempt, val range: Range.NonEmpty)
+  private object Scope {
+    val scopes = Array.tabulate(Attempt.Max + 1, MaxValue, MaxValue) { (attempt, i, j) =>
+      if (i > j) null
+      else new Scope(attempt + 1, Range.NonEmpty(i + 1, j + 1))
+    }
+
+    def apply(attempt: Attempt, range: Range.NonEmpty): Scope = {
+      scopes(attempt - 1)(range.lower - 1)(range.upper - 1)
+    }
   }
 }
