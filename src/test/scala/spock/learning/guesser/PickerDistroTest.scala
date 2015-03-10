@@ -44,7 +44,7 @@ class PickerDistroTest extends FlatSpec with ShouldMatchers {
     val prob = PickerDistro.uniform((1 to 10).toSet)
     prob(Range(1)) shouldBe 0.1
     prob(Range(2, 6)) shouldBe 0.5
-    prob(Range(-10, 1)) shouldBe 0.1
+    prob(Range.Empty) shouldBe 0
   }
 
   it should "compute conditional probabilities" in {
@@ -53,7 +53,7 @@ class PickerDistroTest extends FlatSpec with ShouldMatchers {
     prob.conditional(1, Range(1, 5)) shouldBe 0.2
     prob.conditional(6, Range(1, 5)) shouldBe 0
     prob.conditional(Range(2, 5), Range(1, 5)) shouldBe 0.8
-    prob.conditional(Range(-1, 6), Range(1, 5)) shouldBe 1
+    prob.conditional(Range(1, 8), Range(3, 7)) shouldBe 1
     prob.conditional(Range(1, 10), Range.Empty) shouldBe 0
   }
 }

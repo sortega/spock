@@ -29,7 +29,7 @@ object Range {
 
   /** Bounds-included range */
   case class NonEmpty(lower: Int, upper: Int) extends Range {
-    require(lower <= upper, s"Invalid range $this")
+    require(lower >= MinValue && upper <= MaxValue && lower <= upper, s"Invalid range $this")
 
     override def size: Int = upper - lower + 1
 
