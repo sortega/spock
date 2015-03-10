@@ -14,7 +14,14 @@ class ExpectedValueStrategy(prob: PickerDistro) {
     range.lower + scores.indexOf(scores.max)
   }
 
-  private val expectedScores: Scope => Scores = Memo.mutableHashMapMemo { scope =>
+  private val expectedScoresCache = new collection.mutable.HashMap[Scope, Scores] {
+    override protected def initialSize = 16384
+  }
+  private val expectedScoreCache = new collection.mutable.HashMap[Scope, Double] {
+    override protected def initialSize = 32768
+  }
+
+  private val expectedScores: Scope => Scores = Memo.mutableMapMemo(expectedScoresCache) { scope =>
     val scores = Array.fill(scope.range.size)(0d)
     for {
       (pivot, index) <- scope.range.iterable.zipWithIndex
@@ -36,7 +43,7 @@ class ExpectedValueStrategy(prob: PickerDistro) {
     scores
   }
 
-  private val expectedScore: Scope => Double = Memo.mutableHashMapMemo { scope =>
+  private val expectedScore: Scope => Double = Memo.mutableMapMemo(expectedScoreCache) { scope =>
     if (scope.range.size == 0) 0
     else if (scope.range.size == 1 || scope.attempt > Attempt.Max) Score(scope.attempt)
     else expectedScores(scope).max
