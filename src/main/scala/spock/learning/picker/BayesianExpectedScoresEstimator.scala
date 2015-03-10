@@ -13,7 +13,6 @@ class BayesianExpectedScoresEstimator extends ExpectedScoresEstimator {
 
   override def learn(observation: Observation): Unit = {
     beliefs = beliefs.update(observation)
-    println(beliefs)
   }
 
   override def expectedScores = ExpectedScores.linearCombination(beliefs.hypotheses.toSeq.collect {

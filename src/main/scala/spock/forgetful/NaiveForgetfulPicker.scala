@@ -8,4 +8,5 @@ import spock._
 class NaiveForgetfulPicker extends Picker {
   override def pick: Attempt = 1 + Random.nextInt(100)
   override def notifyFeedback(feedback: Feedback): Unit = {}
+  override def toString = "forgetful uniform picker"
 }

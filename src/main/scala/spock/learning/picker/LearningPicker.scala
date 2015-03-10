@@ -19,4 +19,6 @@ class LearningPicker extends Picker {
   private def pickRandomly(): Int = {
     estimator.expectedScores.chooseAmongBest(0.95)
   }
+
+  override def toString = "bayesian picker"
 }

@@ -42,4 +42,6 @@ class LearningGuesser(distroEstimator: DistroEstimator) extends Guesser {
     attempt = 1
     range = Range.Initial
   }
+
+  override def toString = s"$distroEstimator guesser"
 }

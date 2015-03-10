@@ -13,6 +13,8 @@ class FrequencyDistroEstimator(var frequencies: Map[Int, Double]) extends Distro
       frequencies += observation -> (frequencies(observation) + weight)
     }
   }
+
+  override def toString = "frequency count"
 }
 
 object FrequencyDistroEstimator {

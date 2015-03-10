@@ -16,4 +16,6 @@ class NaiveForgetfulGuesser extends Guesser {
       case Bigger => Range.NonEmpty(guess + 1, range.upper)
     }
   }
+
+  override def toString = "forgetful binary search"
 }

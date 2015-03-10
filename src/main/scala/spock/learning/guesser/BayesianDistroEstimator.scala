@@ -40,7 +40,6 @@ class BayesianDistroEstimator extends DistroEstimator {
 
   override def learn(observation: Range.NonEmpty): Unit = {
     beliefs = beliefs.update(observation)
-    println(beliefs)
   }
 
   override def distro: PickerDistro = {
@@ -51,4 +50,6 @@ class BayesianDistroEstimator extends DistroEstimator {
       .groupBy(_._1)
       .mapValues(_.map(_._2).sum))
   }
+
+  override def toString = "bayesian estimation"
 }
