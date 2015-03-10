@@ -1,9 +1,9 @@
-package spock.forgetful
+package spock.stateless
 
 import spock.Guesser._
 import spock.{Guesser, Range}
 
-class NaiveForgetfulGuesser extends Guesser {
+class NaiveGuesser extends Guesser {
 
   private var range = Range.Initial
 
@@ -17,5 +17,5 @@ class NaiveForgetfulGuesser extends Guesser {
     }
   }
 
-  override def toString = "forgetful binary search"
+  override def toString = "naïve binary search"
 }
