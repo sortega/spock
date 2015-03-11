@@ -1,6 +1,7 @@
 package spock
 
 import spock.Guesser.Feedback
+import spock.util.LineOrientedIO
 
 class GuesserRunner(guesser: Guesser) extends LineOrientedIO.Handler {
 

@@ -1,4 +1,4 @@
-package spock
+package spock.util
 
 import java.io._
 

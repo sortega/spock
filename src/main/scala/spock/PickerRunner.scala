@@ -1,5 +1,7 @@
 package spock
 
+import spock.util.LineOrientedIO
+
 class PickerRunner(picker: Picker) extends LineOrientedIO.Handler {
 
   override def onStart(): Seq[String] = {

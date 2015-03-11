@@ -1,5 +1,7 @@
 package spock
 
+import spock.util.LineOrientedIO
+
 object Main {
   def main(args: Array[String]): Unit = args match {
     case Array("pick") => LineOrientedIO(new PickerRunner(Strategy.Picker.Bayesian))

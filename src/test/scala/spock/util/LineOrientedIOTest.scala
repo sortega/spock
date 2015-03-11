@@ -1,4 +1,4 @@
-package spock
+package spock.util
 
 import java.io._
 import scala.concurrent.ExecutionContext.Implicits.global
