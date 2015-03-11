@@ -56,4 +56,12 @@ class PickerDistroTest extends FlatSpec with ShouldMatchers {
     prob.conditional(Range(1, 8), Range(3, 7)) shouldBe 1
     prob.conditional(Range(1, 10), Range.Empty) shouldBe 0
   }
+
+  it should "compute entropy of ranges" in {
+    val prob = PickerDistro.uniform(Set(1, 2))
+    prob.entropy(Range.Initial) shouldBe 1
+    prob.entropy(Range(1, 2)) shouldBe 1
+    prob.entropy(Range(1)) shouldBe 0
+    PickerDistro.uniform((1 to 100).toSet).entropy(Range.Initial) should equal (6.643 +- 0.001)
+  }
 }

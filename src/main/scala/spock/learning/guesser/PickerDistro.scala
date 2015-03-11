@@ -13,10 +13,7 @@ case class PickerDistro(events: Map[Int, Double]) {
 
   def apply(event: Int): Double = events.getOrElse(event, 0d)
 
-  def apply(eventRange: Range): Double = eventRange match {
-    case Range.Empty => 0
-    case Range.NonEmpty(lower, upper) => cdf(upper min MaxValue) - cdf((lower max MinValue) - 1)
-  }
+  def apply(eventRange: Range): Double = sum(cdf, eventRange)
 
   def conditional(event: Int, given: Range): Double = conditional(Range(event), given)
 
@@ -24,9 +21,24 @@ case class PickerDistro(events: Map[Int, Double]) {
     val givenProb = apply(given)
     if (givenProb > 0) apply(events intersect given) / givenProb else 0
   }
+
+  def entropy(range: Range): Double = {
+    val givenProb = apply(range)
+    (for {
+      event <- range.iterable
+      rawProb <- events.get(event) if rawProb > 0
+      prob = rawProb / givenProb
+    } yield -prob * math.log(prob) / PickerDistro.Log2).sum
+  }
+
+  private def sum(array: Array[Double], range: Range): Double = range match {
+    case Range.Empty => 0d
+    case Range.NonEmpty(lower, upper) => array(upper) - array(lower - 1)
+  }
 }
 
 object PickerDistro {
+  private val Log2 = math.log(2)
 
   def apply(events: (Int, Double)*): PickerDistro = PickerDistro(events.toMap)
 
