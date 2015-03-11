@@ -1,11 +1,14 @@
 package spock.learning.guesser
 
 import spock.Guesser._
+import spock.learning.guesser.distro.{PickerDistro, DistroEstimator}
 import spock.{Guesser, Range}
 
-class LearningGuesser(distroEstimator: DistroEstimator) extends Guesser {
+class LearningGuesser(
+   distroEstimator: DistroEstimator,
+   strategyFactory: PickerDistro => ChooseStrategy) extends Guesser {
 
-  private var strategy = new ExpectedValueStrategy(distroEstimator.distro)
+  private var strategy = strategyFactory(distroEstimator.distro)
   private var attempt = 1
   private var range = Range.Initial
 
@@ -38,10 +41,10 @@ class LearningGuesser(distroEstimator: DistroEstimator) extends Guesser {
   }
 
   private def nextRound() = {
-    strategy = new ExpectedValueStrategy(distroEstimator.distro)
+    strategy = strategyFactory(distroEstimator.distro)
     attempt = 1
     range = Range.Initial
   }
 
-  override def toString = s"$distroEstimator guesser"
+  override def toString = s"$distroEstimator $strategy guesser"
 }

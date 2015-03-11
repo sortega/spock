@@ -1,4 +1,4 @@
-package spock.stateless
+package spock.simple
 
 import spock.Guesser._
 import spock.{Guesser, Range}

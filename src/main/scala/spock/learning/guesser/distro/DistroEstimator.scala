@@ -1,4 +1,4 @@
-package spock.learning.guesser
+package spock.learning.guesser.distro
 
 import spock.Range
 

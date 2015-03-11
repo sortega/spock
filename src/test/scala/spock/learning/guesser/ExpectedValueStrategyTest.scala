@@ -2,6 +2,7 @@ package spock.learning.guesser
 
 import org.scalatest.{FlatSpec, ShouldMatchers}
 import spock.Range
+import spock.learning.guesser.distro.PickerDistro
 
 class ExpectedValueStrategyTest extends FlatSpec with ShouldMatchers {
   val uniformStrategy = new ExpectedValueStrategy(PickerDistro.uniform((1 to 100).toSet))

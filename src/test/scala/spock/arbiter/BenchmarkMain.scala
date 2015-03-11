@@ -7,11 +7,11 @@ object BenchmarkMain extends App {
   def printRanking(name: String, ranking: Seq[(Any, Int)]): Unit = {
     println(s"$name ranking")
     for ((player, score) <- ranking.sortBy(-_._2)) {
-      println(s"\t$score\t$player")
+      println("\t% 12d\t%s".format(score, player))
     }
   }
 
-  val arbiter = new Arbiter(100)
+  val arbiter = new Arbiter(10000)
   val results = (for {
     picker <- Strategy.Pickers
     guesser <- Strategy.Guessers

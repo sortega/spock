@@ -2,6 +2,7 @@ package spock.learning.guesser
 
 import spock.Range.NonEmpty
 import spock._
+import spock.learning.guesser.distro.{PickerDistro, DistroEstimator}
 
 class FrequencyDistroEstimator(var frequencies: Map[Int, Double]) extends DistroEstimator {
 
@@ -14,7 +15,7 @@ class FrequencyDistroEstimator(var frequencies: Map[Int, Double]) extends Distro
     }
   }
 
-  override def toString = "frequency count"
+  override def toString = "frequentist"
 }
 
 object FrequencyDistroEstimator {

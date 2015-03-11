@@ -3,13 +3,14 @@ package spock.learning.guesser
 import scalaz.Memo
 
 import spock._
+import spock.learning.guesser.distro.PickerDistro
 
-class ExpectedValueStrategy(prob: PickerDistro) {
+class ExpectedValueStrategy(prob: PickerDistro) extends ChooseStrategy {
 
   import ExpectedValueStrategy._
   type Scores = Array[Double]
 
-  def choose(attempt: Attempt, range: Range.NonEmpty): Int = {
+  override def choose(attempt: Attempt, range: Range.NonEmpty): Int = {
     val scores = expectedScores(Scope(attempt, range))
     range.lower + scores.indexOf(scores.max)
   }
@@ -48,6 +49,8 @@ class ExpectedValueStrategy(prob: PickerDistro) {
     else if (scope.range.size == 1 || scope.attempt > Attempt.Max) Score(scope.attempt)
     else expectedScores(scope).max
   }
+
+  override def toString = "expected-value"
 }
 
 private object ExpectedValueStrategy {

@@ -1,4 +1,4 @@
-package spock.stateless
+package spock.simple
 
 import scala.util.Random
 
