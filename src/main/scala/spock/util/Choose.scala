@@ -1,8 +1,9 @@
 package spock.util
 
-import scala.util.Random
+import java.security.SecureRandom
 
 object Choose {
+  private val Random = new scala.util.Random(new SecureRandom())
 
   def best[A](weightedElements: Map[A, Double]): A = best(weightedElements.toSeq)
 
