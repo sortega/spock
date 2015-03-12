@@ -1,7 +1,8 @@
 package spock.learning.guesser
 
+import spock._
 import spock.learning.guesser.distro.PickerDistro
-import spock.{Attempt, Range}
+import spock.util.Choose
 
 class InformationGainStrategy(distro: PickerDistro) extends ChooseStrategy {
   override def choose(attempt: Attempt, range: Range.NonEmpty): Attempt = {
@@ -12,8 +13,15 @@ class InformationGainStrategy(distro: PickerDistro) extends ChooseStrategy {
         distro.conditional(leftRange, range) * distro.entropy(leftRange) -
           distro.conditional(rightRange, range) * distro.entropy(rightRange)
     }
-    val gains = range.iterable.map(pivot => pivot -> informationGain(pivot))
-    gains.maxBy(_._2)._1
+    val gains = range.iterable.map(pivot => pivot -> informationGain(pivot)).toMap
+    Choose.randomly(selectBest(gains))
+  }
+
+  private def selectBest(weightedValues: Map[Attempt, Double]): Vector[Attempt] = {
+    val bestScore = weightedValues.values.max
+    weightedValues.collect {
+      case (eligible, score) if score + Eps >= bestScore => eligible
+    }.toVector
   }
 
   override def toString = "information-gain"
