@@ -4,6 +4,7 @@ import scalaz.Memo
 
 import spock._
 import spock.learning.guesser.distro.PickerDistro
+import spock.util.Choose
 
 class ExpectedValueStrategy(prob: PickerDistro) extends ChooseStrategy {
 
@@ -11,7 +12,11 @@ class ExpectedValueStrategy(prob: PickerDistro) extends ChooseStrategy {
 
   override def choose(attempt: Attempt, range: Range.NonEmpty): Int = {
     val scores = expectedScores(Scope(attempt, range))
-    range.lower + scores.indexOf(scores.max)
+    val bestScore = scores.max
+    val eligible = scores.zipWithIndex.collect {
+      case (score, index) if score + Eps >= bestScore => range.lower + index
+    }
+    Choose.randomly(eligible)
   }
 
   private val expectedScoresCache = new collection.mutable.HashMap[Scope, Scores] {
