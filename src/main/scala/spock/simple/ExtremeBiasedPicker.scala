@@ -7,5 +7,5 @@ import spock.util.Choose
 class ExtremeBiasedPicker extends Picker {
   override def pick = Choose.randomly(1 to 5)
   override def notifyFeedback(feedback: Feedback): Unit = {}
-  override def toString = "naïve uniform picker"
+  override def toString = "biased picker"
 }
