@@ -2,7 +2,7 @@ package spock.learning.guesser
 
 import spock.Guesser._
 import spock.learning.guesser.distro.{DistroEstimator, PickerDistro}
-import spock.{Guesser, Range}
+import spock.{Attempt, Guesser, Range}
 
 class LearningGuesser(
    distroEstimator: DistroEstimator,
@@ -17,12 +17,6 @@ class LearningGuesser(
   override def guess = currentGuess
 
   override def notifyFeedback(feedback: Feedback): Unit = feedback match {
-    case Bigger =>
-      narrowRange(scope.range.splitBy(guess)._2, feedback)
-
-    case Smaller =>
-      narrowRange(scope.range.splitBy(guess)._1, feedback)
-
     case Guessed =>
       distroEstimator.learn(Range(guess))
       nextRound()
@@ -30,6 +24,17 @@ class LearningGuesser(
     case NotGuessed =>
       distroEstimator.learn(scope.range)
       nextRound()
+
+    case _ if scope.attempt == Attempt.Max =>
+      println(s"Impossible input: this is the attempt ${scope.attempt}, " +
+        s"it can't be ${feedback.toString.toLowerCase}")
+      nextRound()
+
+    case Bigger =>
+      narrowRange(scope.range.splitBy(guess)._2, feedback)
+
+    case Smaller =>
+      narrowRange(scope.range.splitBy(guess)._1, feedback)
   }
 
   private def narrowRange(newRange: Range, feedback: Feedback): Unit = newRange match {
