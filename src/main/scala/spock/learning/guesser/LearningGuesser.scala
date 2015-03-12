@@ -1,49 +1,54 @@
 package spock.learning.guesser
 
 import spock.Guesser._
-import spock.learning.guesser.distro.{PickerDistro, DistroEstimator}
+import spock.learning.guesser.distro.{DistroEstimator, PickerDistro}
 import spock.{Guesser, Range}
 
 class LearningGuesser(
    distroEstimator: DistroEstimator,
    strategyFactory: PickerDistro => ChooseStrategy) extends Guesser {
 
-  private var strategy = strategyFactory(distroEstimator.distro)
-  private var attempt = 1
-  private var range = Range.Initial
+  private var strategy: ChooseStrategy = _
+  private var scope: Scope = _
+  private var currentGuess: Int = _
 
-  override def guess = strategy.choose(attempt, range)
+  nextRound()
+
+  override def guess = currentGuess
 
   override def notifyFeedback(feedback: Feedback): Unit = feedback match {
     case Bigger =>
-      narrowRange(range.splitBy(guess)._2, feedback)
+      narrowRange(scope.range.splitBy(guess)._2, feedback)
 
     case Smaller =>
-      narrowRange(range.splitBy(guess)._1, feedback)
+      narrowRange(scope.range.splitBy(guess)._1, feedback)
 
     case Guessed =>
       distroEstimator.learn(Range(guess))
       nextRound()
 
     case NotGuessed =>
-      distroEstimator.learn(range)
+      distroEstimator.learn(scope.range)
       nextRound()
   }
 
   private def narrowRange(newRange: Range, feedback: Feedback): Unit = newRange match {
     case Range.Empty =>
       println(s"Impossible input: cannot be ${feedback.toString.toLowerCase} than $guess " +
-        s"when narrowed down to $range at the attempt $attempt")
+        s"when narrowed down to ${scope.range} at the attempt ${scope.attempt}")
       nextRound()
     case nonEmptyRange: Range.NonEmpty =>
-      attempt += 1
-      range = nonEmptyRange
+      updateScope(Scope(scope.attempt + 1, nonEmptyRange))
   }
 
   private def nextRound() = {
     strategy = strategyFactory(distroEstimator.distro)
-    attempt = 1
-    range = Range.Initial
+    updateScope(Scope.Initial)
+  }
+
+  private def updateScope(newScope: Scope): Unit = {
+    scope = newScope
+    currentGuess = strategy.choose(scope.attempt, scope.range)
   }
 
   override def toString = s"$distroEstimator $strategy guesser"
