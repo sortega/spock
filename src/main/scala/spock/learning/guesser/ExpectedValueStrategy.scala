@@ -7,7 +7,6 @@ import spock.learning.guesser.distro.PickerDistro
 
 class ExpectedValueStrategy(prob: PickerDistro) extends ChooseStrategy {
 
-  import ExpectedValueStrategy._
   type Scores = Array[Double]
 
   override def choose(attempt: Attempt, range: Range.NonEmpty): Int = {
@@ -51,18 +50,4 @@ class ExpectedValueStrategy(prob: PickerDistro) extends ChooseStrategy {
   }
 
   override def toString = "expected-value"
-}
-
-private object ExpectedValueStrategy {
-  private class Scope private (val attempt: Attempt, val range: Range.NonEmpty)
-  private object Scope {
-    val scopes = Array.tabulate(Attempt.Max + 1, MaxValue, MaxValue) { (attempt, i, j) =>
-      if (i > j) null
-      else new Scope(attempt + 1, Range.NonEmpty(i + 1, j + 1))
-    }
-
-    def apply(attempt: Attempt, range: Range.NonEmpty): Scope = {
-      scopes(attempt - 1)(range.lower - 1)(range.upper - 1)
-    }
-  }
 }
