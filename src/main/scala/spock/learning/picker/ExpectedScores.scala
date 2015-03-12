@@ -1,20 +1,21 @@
 package spock.learning.picker
 
-import scala.util.Random
-
 import spock._
+import spock.util.Choose
 
 /** Expected score of a guesser depending on the value to guess */
 case class ExpectedScores(averageScores: Vector[Double]) {
   require(averageScores.size == MaxValue, s"Invalid vector size: $averageScores")
   require(averageScores.forall(_ >= 0), s"Negative expected scores: $averageScores")
 
+  def asMap: Map[Int, Double] = (MinValue to MaxValue).zip(averageScores).toMap
+
   def chooseAmongBest(percentile: Double): Int = {
     val threshold = averageScores.max * percentile
     val eligible = for {
       (score, index) <- averageScores.zipWithIndex if score >= threshold
     } yield index + 1
-    eligible(Random.nextInt(eligible.size))
+    Choose.randomly(eligible)
   }
 }
 

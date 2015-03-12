@@ -3,6 +3,7 @@ package spock.learning.picker
 import spock.Picker
 import spock.Picker.Feedback
 import spock.learning.picker.GuesserHypothesis.Observation
+import spock.util.Choose
 
 class LearningPicker extends Picker {
 
@@ -17,7 +18,7 @@ class LearningPicker extends Picker {
   }
 
   private def pickRandomly(): Int = {
-    estimator.expectedScores.chooseAmongBest(0.95)
+    Choose.randomlyOverPercentile(0.98, estimator.expectedScores.asMap)
   }
 
   override def toString = "bayesian picker"

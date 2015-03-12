@@ -1,13 +1,12 @@
 package spock.simple
 
-import scala.util.Random
-
 import spock.Picker
 import spock.Picker.Feedback
+import spock.util.Choose
 
 class AntiBinaryPicker extends Picker {
   import AntiBinaryPicker._
-  override def pick = SafePicks(Random.nextInt(SafePicks.size))
+  override def pick = Choose.randomly(SafePicks)
   override def notifyFeedback(feedback: Feedback): Unit = {}
   override def toString = "anti-binary picker"
 }
