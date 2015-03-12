@@ -4,7 +4,7 @@ import scala.annotation.tailrec
 
 import spock.{Picker, Guesser}
 
-class Arbiter(numRounds: Int) {
+class Arbiter(numRounds: Int, debug: Boolean) {
 
   def apply(picker: Picker, guesser: Guesser): Arbiter.MatchResult = {
     println(s"$picker vs $guesser")
@@ -12,7 +12,11 @@ class Arbiter(numRounds: Int) {
       if (index % (numRounds / 10) == 1) {
         println(s"  round $index")
       }
-      playRound(picker, guesser)
+      val result = playRound(picker, guesser)
+      if (debug) {
+        println(result)
+      }
+      result
     }
     Arbiter.MatchResult(rounds.map(_.guesserPoints).sum, rounds)
   }

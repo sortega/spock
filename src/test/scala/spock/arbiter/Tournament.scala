@@ -5,17 +5,17 @@ import spock.{Guesser, Picker}
 
 class Tournament(pickers: Seq[Picker], guessers: Seq[Guesser]) {
 
-  def run(rounds: Int): Unit = {
-    val results = runMatches(rounds)
+  def run(rounds: Int, debug: Boolean = false): Unit = {
+    val results = runMatches(rounds, debug)
     printMatchesStats(results)
     printPickerRanking(results)
     printGuesserRanking(results)
   }
 
-  private def runMatches(rounds: Int): Map[(Picker, Guesser), MatchResult] = (for {
+  private def runMatches(rounds: Int, debug: Boolean): Map[(Picker, Guesser), MatchResult] = (for {
     picker <- pickers
     guesser <- guessers
-    arbiter = new Arbiter(rounds)
+    arbiter = new Arbiter(rounds, debug)
   } yield (picker, guesser) -> arbiter(picker, guesser)).toMap
 
   private def printMatchesStats(results: Map[(Picker, Guesser), MatchResult]): Unit = {
