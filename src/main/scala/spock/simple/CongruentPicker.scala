@@ -11,7 +11,7 @@ import spock.Picker.Feedback
   */
 class CongruentPicker(seed: Int = Random.nextInt()) extends Picker {
 
-  private var currentPick = seed % MaxValue + 1
+  private var currentPick = seed.abs % MaxValue + 1
 
   override def pick = currentPick
 
