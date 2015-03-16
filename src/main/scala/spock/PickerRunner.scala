@@ -2,7 +2,7 @@ package spock
 
 import spock.util.LineOrientedIO
 
-class PickerRunner(picker: Picker) extends LineOrientedIO.Handler {
+class PickerRunner(var picker: Picker) extends LineOrientedIO.Handler {
 
   override def onStart(): Seq[String] = {
     Seq(picker.pick.toString)
@@ -10,7 +10,7 @@ class PickerRunner(picker: Picker) extends LineOrientedIO.Handler {
 
   override def onLine(line: String): Seq[String] = {
     Picker.Feedback.parse(line).fold(Seq(s"Unexpected input: $line")) { feedback =>
-      picker.notifyFeedback(feedback)
+      picker = picker.next(feedback)
       Seq(picker.pick.toString)
     }
   }

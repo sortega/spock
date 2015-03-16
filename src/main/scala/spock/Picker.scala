@@ -3,8 +3,8 @@ package spock
 import scalaz.syntax.std.option._
 
 trait Picker {
-  def pick: Int
-  def notifyFeedback(feedback: Picker.Feedback): Unit
+  val pick: Int
+  def next(feedback: Picker.Feedback): Picker
 }
 
 object Picker {

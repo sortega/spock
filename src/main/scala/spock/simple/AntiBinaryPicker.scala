@@ -5,9 +5,8 @@ import spock.Picker.Feedback
 import spock.util.Choose
 
 class AntiBinaryPicker extends Picker {
-  import AntiBinaryPicker._
-  override def pick = Choose.randomly(SafePicks)
-  override def notifyFeedback(feedback: Feedback): Unit = {}
+  override val pick = Choose.randomly(AntiBinaryPicker.SafePicks)
+  override def next(feedback: Feedback) = new AntiBinaryPicker
   override def toString = "anti-binary picker"
 }
 
