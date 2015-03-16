@@ -5,7 +5,7 @@ import spock.learning.guesser.distro.{DistroEstimator, PickerDistro}
 import spock.{Attempt, Guesser, Range}
 
 class LearningGuesser(
-   distroEstimator: DistroEstimator,
+   private var distroEstimator: DistroEstimator,
    strategyFactory: PickerDistro => ChooseStrategy) extends Guesser {
 
   private var strategy: ChooseStrategy = _
@@ -18,11 +18,11 @@ class LearningGuesser(
 
   override def notifyFeedback(feedback: Feedback): Unit = feedback match {
     case Guessed =>
-      distroEstimator.learn(Range(guess))
+      distroEstimator = distroEstimator.learn(Range(guess))
       nextRound()
 
     case NotGuessed =>
-      distroEstimator.learn(scope.range)
+      distroEstimator = distroEstimator.learn(scope.range)
       nextRound()
 
     case _ if scope.attempt == Attempt.Max =>

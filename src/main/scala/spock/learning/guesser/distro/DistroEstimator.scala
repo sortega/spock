@@ -4,6 +4,10 @@ import spock.Range
 
 /** Distribution estimator that learns with each observations */
 trait DistroEstimator {
-  def learn(observation: Range.NonEmpty): Unit
-  def distro: PickerDistro
+  val distro: PickerDistro
+
+  def learn(observation: Range.NonEmpty): DistroEstimator
+
+  def learn(observations: Seq[Range.NonEmpty]): DistroEstimator =
+    observations.foldLeft(this)(_ learn _)
 }

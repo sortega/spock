@@ -4,20 +4,19 @@ import spock._
 import spock.bayes.BayesianBeliefs
 import spock.learning.guesser.distro.{PickerDistro, DistroEstimator}
 
-class BayesianDistroEstimator extends DistroEstimator {
+class BayesianDistroEstimator(
+    beliefs: BayesianBeliefs[Range.NonEmpty, PickerHypothesis] = BayesianBeliefs(Map(
+      UniformPickerHypothesis -> 0.5,
+      AntiBinaryPickerHypothesis -> 0.3,
+      new StaticDistributionHypothesis -> 0.1,
+      new MarkovChainPickerHypothesis(0.001) -> 0.1
+    ))) extends DistroEstimator {
 
-  private var beliefs = BayesianBeliefs[Range.NonEmpty, PickerHypothesis](Map(
-    UniformPickerHypothesis -> 0.5,
-    AntiBinaryPickerHypothesis -> 0.3,
-    new StaticDistributionHypothesis -> 0.1,
-    new MarkovChainPickerHypothesis(0.001) -> 0.1
-  ))
-
-  override def learn(observation: Range.NonEmpty): Unit = {
-    beliefs = beliefs.update(observation)
+  override def learn(observation: Range.NonEmpty): BayesianDistroEstimator = {
+    new BayesianDistroEstimator(beliefs.update(observation))
   }
 
-  override def distro: PickerDistro = {
+  override val distro: PickerDistro = {
     val scaledEvents = for {
       (hypothesis, prob) <- beliefs.hypotheses
     } yield hypothesis.distro.events.mapValues(_ * prob)

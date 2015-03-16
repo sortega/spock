@@ -2,17 +2,18 @@ package spock.learning.guesser
 
 import spock.Range.NonEmpty
 import spock._
-import spock.learning.guesser.distro.{PickerDistro, DistroEstimator}
+import spock.learning.guesser.distro.{DistroEstimator, PickerDistro}
 
-class FrequencyDistroEstimator(var frequencies: Map[Int, Double]) extends DistroEstimator {
+class FrequencyDistroEstimator(frequencies: Map[Int, Double]) extends DistroEstimator {
 
-  override def distro = PickerDistro.normalize(frequencies)
+  override val distro = PickerDistro.normalize(frequencies)
 
-  override def learn(observation: NonEmpty): Unit = {
-    val weight = 1d / observation.size
-    observation.iterable.foreach { observation =>
-      frequencies += observation -> (frequencies(observation) + weight)
-    }
+  override def learn(observation: NonEmpty): FrequencyDistroEstimator = {
+    val weightIncrease = 1d / observation.size
+    new FrequencyDistroEstimator(frequencies = frequencies.map {
+      case (value, weight) if observation.contains(value) => (value, weight + weightIncrease)
+      case otherwise => otherwise
+    })
   }
 
   override def toString = "frequentist"
