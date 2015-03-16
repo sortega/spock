@@ -8,44 +8,47 @@ class Arbiter(numRounds: Int, debug: Boolean) {
 
   def apply(picker: Picker, guesser: Guesser): Arbiter.MatchResult = {
     println(s"$picker vs $guesser")
-    val rounds = (1 to numRounds).map { index =>
-      if (index % (numRounds / 10) == 1) {
-        println(s"  round $index")
-      }
-      val result = playRound(picker, guesser)
-      if (debug) {
-        println(result)
-      }
-      result
-    }
+    val rounds = playRounds(picker, guesser)
     Arbiter.MatchResult(rounds.map(_.guesserPoints).sum, rounds)
   }
 
-  private def playRound(picker: Picker, guesser: Guesser): Arbiter.Round = {
+  private def playRounds(picker: Picker,
+                         guesser: Guesser,
+                         rounds: Seq[Arbiter.Round] = Seq.empty): Seq[Arbiter.Round] =
+    if (rounds.size == numRounds) rounds
+    else {
+      if (rounds.size % (numRounds / 10) == 1) {
+        println(s"  round ${rounds.size}")
+      }
+      val (nextGuesser, round) = playRound(picker, guesser)
+      if (debug) {
+        println(round)
+      }
+      playRounds(picker, nextGuesser, rounds :+ round)
+    }
+
+  private def playRound(picker: Picker, guesser: Guesser): (Guesser, Arbiter.Round) = {
     val startMillis = System.currentTimeMillis()
     val pick = picker.pick
 
     @tailrec
-    def nextAttempt(attempts: Seq[Int] = Seq.empty): Seq[Int] = {
-      if (attempts.lastOption == Some(pick)) {
-        guesser.notifyFeedback(Guesser.Guessed)
-        picker.notifyFeedback(Picker.Guessed(attempts.size))
-        attempts
-      } else if (attempts.size == 5) {
-        guesser.notifyFeedback(Guesser.NotGuessed)
+    def nextAttempt(guesser: Guesser, pastAttempts: Seq[Int] = Seq.empty): (Guesser, Seq[Int]) = {
+      val attempts = pastAttempts :+ guesser.guess
+      if (guesser.guess == pick) {
+        picker.notifyFeedback(Picker.Guessed(pastAttempts.size + 1))
+        (guesser.next(Guesser.Guessed), attempts)
+      } else if (pastAttempts.size == 4) {
         picker.notifyFeedback(Picker.NotGuessed)
-        attempts
+        (guesser.next(Guesser.NotGuessed), attempts)
       } else {
-        attempts.lastOption.foreach { lastAttempt =>
-          guesser.notifyFeedback(if (lastAttempt > pick) Guesser.Smaller else Guesser.Bigger)
-        }
-        nextAttempt(attempts :+ guesser.guess)
+        val feedback = if (pick > guesser.guess) Guesser.Bigger else Guesser.Smaller
+        nextAttempt(guesser.next(feedback), attempts)
       }
     }
 
-    val attempts = nextAttempt()
+    val (nextGuesser, attempts) = nextAttempt(guesser)
     val millis = System.currentTimeMillis() - startMillis
-    Arbiter.Round(millis, pick, attempts)
+    (nextGuesser, Arbiter.Round(millis, pick, attempts))
   }
 }
 

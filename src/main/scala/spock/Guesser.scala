@@ -1,8 +1,8 @@
 package spock
 
 trait Guesser {
-  def guess: Int
-  def notifyFeedback(feedback: Guesser.Feedback): Unit
+  val guess: Int
+  def next(feedback: Guesser.Feedback): Guesser
 }
 
 object Guesser {

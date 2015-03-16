@@ -9,11 +9,14 @@ import spock.learning.picker.LearningPicker
 object Strategy {
   object Guesser {
     val Naive = new NaiveGuesser
+    val RandomBinary = RandomBinaryGuesser()
+    val Random31 = Random31Guesser.random()
     val FreqCount = new LearningGuesser(FrequencyDistroEstimator.uniformPrior(0.1), new InformationGainStrategy(_))
     val ExpectedValueBayesian = new LearningGuesser(new BayesianDistroEstimator, new ExpectedValueStrategy(_))
     val InfoGainBayesian = new LearningGuesser(new BayesianDistroEstimator, new InformationGainStrategy(_))
   }
-  val Guessers = Seq(Guesser.Naive, Guesser.FreqCount, Guesser.ExpectedValueBayesian, Guesser.InfoGainBayesian)
+  val Guessers = Seq(Guesser.Naive, Guesser.RandomBinary, Guesser.Random31, Guesser.FreqCount,
+    Guesser.ExpectedValueBayesian, Guesser.InfoGainBayesian)
   object Picker {
     val ExtremeBias = new ExtremeBiasedPicker
     val Uniform = new UniformPicker

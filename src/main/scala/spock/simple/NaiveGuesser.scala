@@ -3,18 +3,14 @@ package spock.simple
 import spock.Guesser._
 import spock.{Guesser, Range}
 
-class NaiveGuesser extends Guesser {
+case class NaiveGuesser(range: Range.NonEmpty = Range.Initial) extends Guesser {
 
-  private var range = Range.Initial
+  override val guess = (range.upper + range.lower) / 2
 
-  override def guess = (range.upper + range.lower) / 2
-
-  override def notifyFeedback(feedback: Feedback): Unit = {
-    range = feedback match {
-      case Guessed | NotGuessed => Range.Initial
-      case Smaller => Range.NonEmpty(range.lower, guess - 1)
-      case Bigger => Range.NonEmpty(guess + 1, range.upper)
-    }
+  override def next(feedback: Feedback): NaiveGuesser = feedback match {
+    case Guessed | NotGuessed => NaiveGuesser()
+    case Smaller => NaiveGuesser(Range.NonEmpty(range.lower, guess - 1))
+    case Bigger => NaiveGuesser(Range.NonEmpty(guess + 1, range.upper))
   }
 
   override def toString = "naïve binary search"

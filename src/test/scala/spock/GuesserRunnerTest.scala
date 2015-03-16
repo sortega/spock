@@ -5,15 +5,11 @@ import spock.Guesser._
 
 class GuesserRunnerTest extends FlatSpec with ShouldMatchers {
 
-  class TestGuesser extends Guesser {
-    private var currentGuess = 50
-
-    override def guess = currentGuess
-
-    override def notifyFeedback(feedback: Feedback) = feedback match {
-      case Bigger => currentGuess += 1
-      case Smaller => currentGuess -= 1
-      case Guessed | NotGuessed => currentGuess = 50
+  case class TestGuesser(override val guess: Int = 50) extends Guesser {
+    override def next(feedback: Feedback) = feedback match {
+      case Bigger => copy(guess + 1)
+      case Smaller => copy(guess - 1)
+      case Guessed | NotGuessed => TestGuesser()
     }
   }
 
