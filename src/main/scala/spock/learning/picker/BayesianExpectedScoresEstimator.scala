@@ -18,7 +18,9 @@ object BayesianExpectedScoresEstimator {
 
   def withDefaultPriors() = BayesianExpectedScoresEstimator(BayesianBeliefs(Map(
     BinarySearchHypothesis -> 0.5,
-    PerfectlyRandomHypothesis -> 0.4,
-    new FrequencyCountHypothesis(1) -> 0.1
+    PerfectlyRandomHypothesis -> 0.3,
+    new FrequencyCountHypothesis(1) -> 0.1,
+    ProfiledGuesserHypothesis.RandomBinary -> 0.05,
+    ProfiledGuesserHypothesis.Random31 -> 0.05
   )))
 }
