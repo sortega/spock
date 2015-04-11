@@ -18,7 +18,7 @@ class InformationGainStrategy(distro: PickerDistro) extends ChooseStrategy {
   }
 
   private def selectBest(weightedValues: Map[Attempt, Double]): Vector[Attempt] = {
-    val bestScore = weightedValues.values.max
+    val bestScore = weightedValues.values.filterNot(_.isNaN).reduceOption(_ max _).getOrElse(0d)
     weightedValues.collect {
       case (eligible, score) if score + Eps >= bestScore => eligible
     }.toVector
