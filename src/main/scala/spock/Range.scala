@@ -20,7 +20,7 @@ object Range {
 
   case object Empty extends Range {
     override def size = 0
-    override def iterable: scala.collection.immutable.Iterable[Int] = 1 to 0
+    override def iterable: immutable.Iterable[Int] = 1 to 0
     override def splitBy(pivot: Int) = (Empty, Empty)
     override def contains(elem: Int) = false
     override def intersect(other: Range) = Empty
