@@ -15,11 +15,11 @@ case class PickerDistro(events: Map[Int, Double]) {
 
   def apply(eventRange: Range): Double = sum(cdf, eventRange)
 
-  def conditional(event: Int, given: Range): Double = conditional(Range(event), given)
+  def conditional(event: Int, condition: Range): Double = conditional(Range(event), condition)
 
-  def conditional(events: Range, given: Range): Double = {
-    val givenProb = apply(given)
-    if (givenProb > 0) apply(events intersect given) / givenProb else 0
+  def conditional(events: Range, condition: Range): Double = {
+    val conditionProb = apply(condition)
+    if (conditionProb > 0) apply(events intersect condition) / conditionProb else 0
   }
 
   def entropy(range: Range): Double = {
@@ -44,7 +44,7 @@ object PickerDistro {
 
   def normalize(events: Map[Int, Double]): PickerDistro = {
     val sum = events.values.sum
-    PickerDistro(events.mapValues(_ / sum))
+    PickerDistro(events.view.mapValues(_ / sum).toMap)
   }
 
   def uniform(events: Set[Int]): PickerDistro = {

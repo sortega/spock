@@ -14,7 +14,7 @@ case class BayesianBeliefs[Obs, Hyp <: Hypothesis[Obs]](hypotheses: Map[Hyp, Dou
 
   private def normalize(notNormalized: Map[Hyp, Double], observation: Obs) = {
     val totalWeight = notNormalized.values.sum
-    if (totalWeight > 0) notNormalized.mapValues(_ / totalWeight)
+    if (totalWeight > 0) notNormalized.view.mapValues(_ / totalWeight).toMap
     else throw new IllegalArgumentException(s"The impossible has happened: $observation, $hypotheses")
   }
 }

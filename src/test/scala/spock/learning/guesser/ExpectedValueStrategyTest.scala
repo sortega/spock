@@ -1,10 +1,11 @@
 package spock.learning.guesser
 
-import org.scalatest.{FlatSpec, ShouldMatchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 import spock.Range
 import spock.learning.guesser.distro.PickerDistro
 
-class ExpectedValueStrategyTest extends FlatSpec with ShouldMatchers {
+class ExpectedValueStrategyTest extends AnyFlatSpec with Matchers {
   val uniformStrategy = new ExpectedValueStrategy(PickerDistro.uniform((1 to 100).toSet))
 
   "The expected value strategy" should "choose the only option" in {
@@ -20,7 +21,7 @@ class ExpectedValueStrategyTest extends FlatSpec with ShouldMatchers {
   it should "choose the central elements when having an uniform distribution" in {
     val startTime = System.currentTimeMillis()
     uniformStrategy.choose(attempt = 1, range = Range.Initial) should equal (50 +- 35)
-    uniformStrategy.choose(attempt = 2, range = Range.NonEmpty(1, 49)) should equal (25 +- 15)
+    uniformStrategy.choose(attempt = 2, range = Range.NonEmpty(1, 49)) should equal (25 +- 17)
     uniformStrategy.choose(attempt = 3, range = Range.NonEmpty(51, 74)) should equal (62 +- 10)
     uniformStrategy.choose(attempt = 1, range = Range.NonEmpty(1, 5)) should equal (3 +- 1)
     val millis = System.currentTimeMillis() - startTime

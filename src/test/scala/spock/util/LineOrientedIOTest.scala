@@ -4,15 +4,15 @@ import java.io._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
-import scalaz.syntax.std.boolean._
 
-import org.scalatest.{FlatSpec, ShouldMatchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class LineOrientedIOTest extends FlatSpec with ShouldMatchers {
+class LineOrientedIOTest extends AnyFlatSpec with Matchers {
 
   class Grep(searchTerm: String) extends LineOrientedIO.Handler {
     override def onLine(line: String): Seq[String] =
-      line.contains(searchTerm).option(line).toSeq
+      if (line.contains(searchTerm)) Seq(line) else Seq.empty
   }
 
   class LineCount extends LineOrientedIO.Handler {
@@ -42,7 +42,7 @@ class LineOrientedIOTest extends FlatSpec with ShouldMatchers {
     pipeInput.write("line1\n")
     pipeInput.write("line2\n")
     Thread.sleep(50)
-    execution should not be 'completed
+    execution.isCompleted shouldBe false
     pipeInput.close()
     Await.ready(execution, 1.second)
     output.toString shouldBe "2\n"

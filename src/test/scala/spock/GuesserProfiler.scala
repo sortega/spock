@@ -21,7 +21,7 @@ class GuesserProfiler(build: => Guesser) {
     val counts = Seq.fill(samplesPerValue)(feedbackFor(value, build))
       .groupBy(identity)
       .mapValues(_.size)
-    ProfiledGuesserHypothesis.FeedbackDistro(counts.mapValues(_.toDouble / samplesPerValue))
+    ProfiledGuesserHypothesis.FeedbackDistro(counts.view.mapValues(_.toDouble / samplesPerValue).toMap)
   }
 
   @tailrec

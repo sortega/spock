@@ -2,10 +2,11 @@ package spock.learning.guesser
 
 import scala.util.Random
 
-import org.scalatest.{FlatSpec, ShouldMatchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 import spock.Range
 
-class FrequencyPickerDistroEstimatorTest extends FlatSpec with ShouldMatchers {
+class FrequencyPickerDistroEstimatorTest extends AnyFlatSpec with Matchers {
 
   "A frequency distribution estimator" should "learn with observations" in {
     val estimator = FrequencyDistroEstimator.uniformPrior(1)

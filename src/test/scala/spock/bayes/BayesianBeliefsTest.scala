@@ -1,9 +1,10 @@
 package spock.bayes
 
-import org.scalatest.{FlatSpec, ShouldMatchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 import spock.Eps
 
-class BayesianBeliefsTest extends FlatSpec with ShouldMatchers {
+class BayesianBeliefsTest extends AnyFlatSpec with Matchers {
 
   case class Machine(defectRate: Double) extends BayesianBeliefs.Hypothesis[Boolean] {
     override def probGiven(failure: Boolean): Double = {

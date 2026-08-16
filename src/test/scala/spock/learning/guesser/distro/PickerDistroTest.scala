@@ -1,9 +1,10 @@
 package spock.learning.guesser.distro
 
-import org.scalatest.{FlatSpec, ShouldMatchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 import spock.Range
 
-class PickerDistroTest extends FlatSpec with ShouldMatchers {
+class PickerDistroTest extends AnyFlatSpec with Matchers {
 
   "A probability distribution" should "have non-negative values" in {
     an [IllegalArgumentException] shouldBe thrownBy {

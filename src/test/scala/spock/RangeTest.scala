@@ -1,8 +1,9 @@
 package spock
 
-import org.scalatest.{FlatSpec, ShouldMatchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class RangeTest extends FlatSpec with ShouldMatchers {
+class RangeTest extends AnyFlatSpec with Matchers {
 
   "A range" should "can be empty or not" in {
     Range(2, 1) shouldBe Range.Empty

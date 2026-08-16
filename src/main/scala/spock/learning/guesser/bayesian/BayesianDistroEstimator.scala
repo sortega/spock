@@ -19,10 +19,10 @@ class BayesianDistroEstimator(
   override val distro: PickerDistro = {
     val scaledEvents = for {
       (hypothesis, prob) <- beliefs.hypotheses
-    } yield hypothesis.distro.events.mapValues(_ * prob)
+    } yield hypothesis.distro.events.view.mapValues(_ * prob).toMap
     PickerDistro(scaledEvents.flatMap(_.toSeq)
       .groupBy(_._1)
-      .mapValues(_.map(_._2).sum))
+      .view.mapValues(_.map(_._2).sum).toMap)
   }
 
   override def toString = "bayesian"

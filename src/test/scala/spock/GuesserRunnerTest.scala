@@ -1,9 +1,10 @@
 package spock
 
-import org.scalatest.{FlatSpec, ShouldMatchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 import spock.Guesser._
 
-class GuesserRunnerTest extends FlatSpec with ShouldMatchers {
+class GuesserRunnerTest extends AnyFlatSpec with Matchers {
 
   case class TestGuesser(override val guess: Int = 50) extends Guesser {
     override def next(feedback: Feedback) = feedback match {

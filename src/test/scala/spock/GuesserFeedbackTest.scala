@@ -1,17 +1,17 @@
 package spock
 
-import scalaz.syntax.std.option._
 
-import org.scalatest.{FlatSpec, ShouldMatchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 import spock.Guesser._
 
-class GuesserFeedbackTest extends FlatSpec with ShouldMatchers {
+class GuesserFeedbackTest extends AnyFlatSpec with Matchers {
 
   "Guesser feedback" should "be pattern matched" in {
-    Feedback.unapply("+") shouldBe Bigger.some
-    Feedback.unapply("-") shouldBe Smaller.some
-    Feedback.unapply("=") shouldBe Guessed.some
-    Feedback.unapply("<>") shouldBe NotGuessed.some
-    Feedback.unapply("*") shouldBe 'empty
+    Feedback.unapply("+") shouldBe Some(Bigger)
+    Feedback.unapply("-") shouldBe Some(Smaller)
+    Feedback.unapply("=") shouldBe Some(Guessed)
+    Feedback.unapply("<>") shouldBe Some(NotGuessed)
+    Feedback.unapply("*") shouldBe empty
   }
 }

@@ -1,8 +1,9 @@
 package spock.util
 
-import org.scalatest.{FlatSpec, ShouldMatchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class ChooseTest extends FlatSpec with ShouldMatchers {
+class ChooseTest extends AnyFlatSpec with Matchers {
 
   "Chooser" should "pick the best element among weighted candidates" in {
     Choose.best(Map("a" -> 1d, "b" -> 2d, "c" -> 3d)) shouldBe "c"

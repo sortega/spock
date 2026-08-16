@@ -41,7 +41,7 @@ class MarkovChainPickerHypothesis(initialWeight: Double) extends PickerHypothesi
     } yield target -> weight
     val distro = PickerDistro.normalize(selectedPairs
       .groupBy(_._1)
-      .mapValues(pairs => pairs.map(_._2).sum))
+      .view.mapValues(pairs => pairs.map(_._2).sum).toMap)
     distro
   }
 
