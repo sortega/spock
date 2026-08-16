@@ -22,9 +22,9 @@ class LearningGuesser(
         s"it can't be ${feedback.toString.toLowerCase}")
       nextGuesser(distroEstimator)
 
-    case Bigger => narrowRange(scope.range.splitBy(guess)._2, feedback)
+    case Greater => narrowRange(scope.range.splitBy(guess)._2, feedback)
 
-    case Smaller => narrowRange(scope.range.splitBy(guess)._1, feedback)
+    case Lower => narrowRange(scope.range.splitBy(guess)._1, feedback)
   }
 
   private def narrowRange(newRange: Range, feedback: Feedback): LearningGuesser = newRange match {

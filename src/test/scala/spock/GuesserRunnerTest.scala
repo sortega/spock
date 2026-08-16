@@ -8,23 +8,38 @@ class GuesserRunnerTest extends AnyFlatSpec with Matchers {
 
   case class TestGuesser(override val guess: Int = 50) extends Guesser {
     override def next(feedback: Feedback) = feedback match {
-      case Bigger => copy(guess + 1)
-      case Smaller => copy(guess - 1)
+      case Greater => copy(guess + 1)
+      case Lower => copy(guess - 1)
       case Guessed | NotGuessed => TestGuesser()
     }
   }
 
-  "A guesser runner" should "parse input and format output until input is closed" in {
+  "A guesser runner" should "emit nothing until commanded" in {
     val runner = new GuesserRunner(new TestGuesser)
-    runner.onStart() shouldBe Seq("50")
-    runner.onLine("+") shouldBe Seq("51")
-    runner.onLine("=") shouldBe Seq("50")
-    runner.onLine("-") shouldBe Seq("49")
-    runner.onLine("<>") shouldBe Seq("50")
+    runner.onStart() shouldBe empty
   }
 
-  it should "stop on unexpected input" in  {
+  it should "play rounds started by the guess command" in {
     val runner = new GuesserRunner(new TestGuesser)
-    runner.onLine("unexpected") shouldBe Seq("Unexpected input: 'unexpected'")
+    runner.onLine("guess") shouldBe Seq("50")
+    runner.onLine("greater") shouldBe Seq("51")
+    runner.onLine("lower") shouldBe Seq("50")
+    runner.onLine("guessed") shouldBe empty
+    runner.onLine("guess") shouldBe Seq("50")
+    runner.onLine("not-guessed") shouldBe empty
+  }
+
+  it should "report an error on unexpected input while idle and keep waiting" in {
+    val runner = new GuesserRunner(new TestGuesser)
+    runner.onLine("greater") shouldBe Seq("error: unexpected input 'greater'")
+    runner.onLine("guess") shouldBe Seq("50")
+  }
+
+  it should "abandon the round on unexpected feedback and resync on the next command" in {
+    val runner = new GuesserRunner(new TestGuesser)
+    runner.onLine("guess") shouldBe Seq("50")
+    runner.onLine("greater") shouldBe Seq("51")
+    runner.onLine("bogus") shouldBe Seq("error: unexpected input 'bogus'")
+    runner.onLine("guess") shouldBe Seq("50")
   }
 }

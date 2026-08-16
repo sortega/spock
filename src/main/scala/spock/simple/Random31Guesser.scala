@@ -1,6 +1,6 @@
 package spock.simple
 
-import spock.Guesser.{Bigger, Feedback, Smaller}
+import spock.Guesser.{Greater, Feedback, Lower}
 import spock._
 import spock.util.Choose
 
@@ -10,8 +10,8 @@ class Random31Guesser(chosenSubset: Seq[Int]) extends Guesser {
   override val guess = chosenSubset.sorted.apply(chosenSubset.size / 2)
 
   override def next(feedback: Feedback): Random31Guesser = feedback match {
-    case Smaller => new Random31Guesser(chosenSubset.filter(_ < guess))
-    case Bigger => new Random31Guesser(chosenSubset.filter(_ > guess))
+    case Lower => new Random31Guesser(chosenSubset.filter(_ < guess))
+    case Greater => new Random31Guesser(chosenSubset.filter(_ > guess))
     case _ => Random31Guesser.random()
   }
 

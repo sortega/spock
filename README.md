@@ -47,7 +47,24 @@ PATH):
 ./spock pick    # play as picker
 ```
 
-Both roles speak the line-oriented protocol on stdin/stdout. Note: recent JDKs
+Both roles speak the line-oriented protocol on stdin/stdout defined in
+`spec.md`. Rounds are started by the coordinator (`guess` / `pick` commands);
+the player answers with numbers, receives `greater`/`lower`/`guessed`/`not-guessed`
+(guesser) or `guessed N`/`not-guessed` (picker) and reports unparseable input as
+`error: <text>` before waiting for the next round command. For example (numbers
+will vary):
+
+```sh
+$ printf 'guess\ngreater\nlower\nguessed\n' | ./spock guess
+35
+61
+47
+$ printf 'pick\nguessed 3\npick\nnot-guessed\n' | ./spock pick
+41
+64
+```
+
+Note: recent JDKs
 print a `sun.misc.Unsafe` deprecation warning on stderr at startup; stdout is
 unaffected.
 

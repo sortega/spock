@@ -11,18 +11,18 @@ object Guesser {
   }
   object Feedback {
     def unapply(str: String): Option[Feedback] =
-      Seq(Bigger, Smaller, Guessed, NotGuessed).find(_.symbol == str)
+      Seq(Greater, Lower, Guessed, NotGuessed).find(_.symbol == str)
   }
-  case object Bigger extends Feedback {
-    override val symbol = "+"
+  case object Greater extends Feedback {
+    override val symbol = "greater"
   }
-  case object Smaller extends Feedback {
-    override val symbol = "-"
+  case object Lower extends Feedback {
+    override val symbol = "lower"
   }
   case object Guessed extends Feedback {
-    override val symbol = "="
+    override val symbol = "guessed"
   }
   case object NotGuessed extends Feedback {
-    override val symbol = "<>"
+    override val symbol = "not-guessed"
   }
 }

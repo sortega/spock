@@ -2,7 +2,7 @@ package spock
 
 import scala.annotation.tailrec
 
-import spock.Guesser.{Bigger, Smaller}
+import spock.Guesser.{Greater, Lower}
 import spock.Picker.{Guessed, NotGuessed}
 import spock.learning.picker.{ProfiledGuesserHypothesis, AttemptsCount}
 import spock.simple.{RandomBinaryGuesser, Random31Guesser}
@@ -29,7 +29,7 @@ class GuesserProfiler(build: => Guesser) {
     if (guesser.guess == value) Guessed(attempt)
     else if (attempt == 5) NotGuessed
     else feedbackFor(
-      value, guesser.next(if (value < guesser.guess) Smaller else Bigger), attempt + 1)
+      value, guesser.next(if (value < guesser.guess) Lower else Greater), attempt + 1)
 }
 
 object GuesserProfiler extends App {

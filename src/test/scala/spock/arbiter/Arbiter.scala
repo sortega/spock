@@ -39,7 +39,7 @@ class Arbiter(numRounds: Int, debug: Boolean) {
       } else if (pastAttempts.size == 4) {
         (picker.next(Picker.NotGuessed), guesser.next(Guesser.NotGuessed), attempts)
       } else {
-        val feedback = if (pick > guesser.guess) Guesser.Bigger else Guesser.Smaller
+        val feedback = if (pick > guesser.guess) Guesser.Greater else Guesser.Lower
         nextAttempt(guesser.next(feedback), attempts)
       }
     }

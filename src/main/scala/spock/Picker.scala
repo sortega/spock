@@ -19,10 +19,10 @@ object Picker {
   }
 
   object Feedback {
-    private val GuessedPattern = "guessed at ([1-5])".r
+    private val GuessedPattern = "guessed ([1-5])".r
 
     def parse(str: String): Option[Feedback] = str match {
-      case "not guessed" => Some(NotGuessed)
+      case "not-guessed" => Some(NotGuessed)
       case GuessedPattern(attempt) => Some(Guessed(attempt.toInt))
       case _ => None
     }
